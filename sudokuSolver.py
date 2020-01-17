@@ -10,13 +10,11 @@
 #   If all digits have been tried and nothing worked, return false
 
 # TODO:
-# make GUI
 # generate sudoku puzzle
 
 def printBoard(board):
-    boardSize = len(board)
-    for row in range(boardSize):
-        for column in range(boardSize):
+    for row in range(len(board)):
+        for column in range(len(board[0])):
             print(board[row][column], end=" ")
         print()
 
@@ -33,8 +31,10 @@ def isValid(board, row, column, choice):
 
     # Check subgrid
     subGridSize = int(len(board) ** (1/2))
+
     c = column - (column % subGridSize)
     r = row - (row % subGridSize)
+    
     for i in range(subGridSize):
         for j in range(subGridSize):
             if board[i+r][j+c] == choice:
@@ -42,26 +42,27 @@ def isValid(board, row, column, choice):
 
     return True
 
-def findUnassignedCell(board, boardSize):
-    for row in range(boardSize):
-        for column in range(boardSize):
+def findUnassignedCell(board):
+    for row in range(len(board)):
+        for column in range(len(board[0])):
             if board[row][column] == 0:
                 return [row, column]
-    return [-1, -1]
+    return None
 
 def solveSudoku(board):
-    boardSize = len(board)
     choices = []
-    for i in range(boardSize):
+    for i in range(len(board)):
         choices.append(i+1)
 
     #  Find row, col of an unassigned cell
-    row, column = findUnassignedCell(board, boardSize)
-    if row == -1:
+    find = findUnassignedCell(board)
+    if not find:
         return True
+    else:
+        row, column = find
 
     for choice in choices:
-        if (isValid(board, row, column, choice)):
+        if isValid(board, row, column, choice):
                 board[row][column] = choice
                 if (solveSudoku(board)):
                     return True
@@ -86,6 +87,18 @@ if __name__ == "__main__":
     ]
 
     # board = [
+    #     [7, 8, 0, 4, 0, 0, 1, 2, 0],
+    #     [6, 0, 0, 0, 7, 5, 0, 0, 9],
+    #     [0, 0, 0, 6, 0, 1, 0, 7, 8],
+    #     [0, 0, 7, 0, 4, 0, 2, 6, 0],
+    #     [0, 0, 1, 0, 5, 0, 9, 3, 0],
+    #     [9, 0, 4, 0, 6, 0, 0, 0, 5],
+    #     [0, 7, 0, 3, 0, 0, 0, 1, 2],
+    #     [1, 2, 0, 0, 0, 7, 4, 0, 0],
+    #     [0, 4, 9, 2, 0, 6, 0, 0, 7]
+    # ]
+
+    # board = [
     #     [5, 3, 0, 0, 7, 0, 0, 0, 0], 
     #     [6, 0, 0, 1, 9, 5, 0, 0, 0], 
     #     [0, 9, 8, 0, 0, 0, 0, 6, 0], 
@@ -95,6 +108,16 @@ if __name__ == "__main__":
     #     [0, 6, 0, 0, 0, 0, 2, 8, 0],
     #     [0, 0, 0, 4, 1, 9, 0, 0, 5],
     #     [0, 0, 0, 0, 8, 0, 0, 7, 9]
+    # ]
+
+    # 6x6 board
+    # board = [
+    #     [0, 0, 0, 2, 0, 0],
+    #     [0, 1, 0, 0, 3, 5],
+    #     [6, 0, 0, 0, 0, 0],
+    #     [0, 0, 0, 0, 0, 1],
+    #     [3, 5, 0, 0, 4, 0],
+    #     [0, 0, 6, 0, 0, 0]
     # ]
 
     # If succesfully solved, print solved board
